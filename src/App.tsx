@@ -1,23 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useMemo } from 'react';
 import './App.css';
+// import * as json from './ujinumbers.json';
+import { PenChar, Word } from './PenChar';
+
+const words = require('./ujinumbers.json') as Word[];
 
 function App() {
+  /*const words = useMemo(() => {
+    const result: Word[] = [];
+    for (const word of json) {
+      result.push(word as Word);
+    }
+    return result;
+  }, []);*/
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {
+          words.map((word, index) => { return (
+            <PenChar key={index} word={word}/>
+          );})
+        }
       </header>
     </div>
   );
