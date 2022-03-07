@@ -1,14 +1,6 @@
 import React, { useMemo } from 'react';
+import { Word } from './model';
 import "./PenChar.css";
-
-export type Stroke = [number, number][];
-
-export interface Word {
-  character: string;
-  writer: string;
-  repetition: number;
-  strokes: Stroke[];
-}
 
 export interface PenCharProps {
   word: Word;
