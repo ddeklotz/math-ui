@@ -1,11 +1,9 @@
 import { Stroke, Word } from "./model";
 
-const sum = (a: number, b: number) => a + b;
-
 export const dtw_segment = (left: Stroke, right: Stroke)  => {
   // the DP solution matrix
   const DTW = new Array((left.length + 1) * (right.length + 1));
-  const dtw_idx = (idx_l: number, idx_r: number) => left.length * (idx_r + 1) + (idx_l + 1);
+  const dtw_idx = (idx_l: number, idx_r: number) => (left.length + 1) * (idx_r + 1) + (idx_l + 1);
 
   DTW[0] = 0;
   for (let i = 0; i < left.length; i++) {
@@ -16,9 +14,9 @@ export const dtw_segment = (left: Stroke, right: Stroke)  => {
   }
 
   for (let i = 0; i < left.length; i++) {
-    for (let j = 0; j < left.length; j++) {
-      const dx = left[i][0] - right[i][0];
-      const dy = left[i][1] - right[i][1];
+    for (let j = 0; j < right.length; j++) {
+      const dx = left[i][0] - right[j][0];
+      const dy = left[i][1] - right[j][1];
       const cost = Math.sqrt(dx * dx + dy * dy);
 
       DTW[dtw_idx(i, j)] = cost + Math.min(
@@ -29,22 +27,20 @@ export const dtw_segment = (left: Stroke, right: Stroke)  => {
     }
   }
 
+  const idx = dtw_idx(left.length - 1, right.length - 1);
+
   return DTW[dtw_idx(left.length - 1, right.length - 1)];
 }
 
 export const dtw_word = (left: Word, right: Word): number => {
-  const strokes = Math.min(left.strokes.length, right.strokes.length);
   // can't really compare a real stroke to a totally empty stroke, because
   // that doesn't leave any room for the DP result table. Instead we just
   // provide one distant point.
-
-  console.log(left);
-  console.log(right);
-
   const emptyStroke: Stroke = [[100000, 100000]];
-  const result = Array(Math.max(left.strokes.length, right.strokes.length))
-    .map((_, idx) => dtw_segment(left.strokes[idx] || [], right.strokes[idx] || emptyStroke))
-    .reduce(sum, 0);
-
-  return result;
+  
+  let sum = 0;
+  for (let i = 0; i < Math.max(left.strokes.length, right.strokes.length); i++) {
+    sum += dtw_segment(left.strokes[i] ?? emptyStroke, right.strokes[i] ?? emptyStroke);
+  }
+  return sum;
 }
