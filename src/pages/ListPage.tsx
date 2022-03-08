@@ -19,7 +19,15 @@ export const GlyphList: React.FC = () => {
 
   return (
     <div className="list" ref={ref}>
-      my width is {width ?? "not known"}, my height is {height ?? "not known"}
+      <FixedSizeList
+        height={height ?? 0}
+        width={width ?? 0}
+        itemSize={300}
+        itemCount={allWords.length}
+        overscanCount={5}
+      >
+        {renderRow}
+      </FixedSizeList>
     </div>
   )
 }
@@ -33,13 +41,5 @@ export const ListPage: React.FC = () => {
 }
 
 /*
-      <FixedSizeList
-        height={1000}
-        width={500}
-        itemSize={300}
-        itemCount={allWords.length}
-        overscanCount={5}
-      >
-        {renderRow}
-      </FixedSizeList>
+      
       */
