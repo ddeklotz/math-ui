@@ -38,7 +38,9 @@ export const dtw_word = (left: Word, right: Word): number => {
   // that doesn't leave any room for the DP result table. Instead we just
   // provide one distant point.
   const emptyStroke: Stroke = [[100000, 100000]];
-  return Array(Math.min(left.strokes.length, right.strokes.length))
+  const result = Array(Math.min(left.strokes.length, right.strokes.length))
     .map((_, idx) => dtw_segment(left.strokes[idx] || [], right.strokes[idx] || emptyStroke))
     .reduce(sum, 0);
+
+  return result;
 }

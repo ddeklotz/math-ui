@@ -1,9 +1,10 @@
 import { MenuItem, Select, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import './App.css';
 import { Word } from './model';
 // import * as json from './ujinumbers.json';
 import { PenChar } from './PenChar';
+import { dtw_word } from './recognition';
 
 const words = require('./ujinumbers.json') as Word[];
 
@@ -11,12 +12,23 @@ function App() {
   const [leftGlyph, setLeftGlyph] = useState<number>();
   const [rightGlyph, setRightGlyph] = useState<number>();
 
+  const score = useMemo(() => {
+    if (leftGlyph === undefined || rightGlyph === undefined) {
+      return undefined;
+    }
+    return dtw_word(words[leftGlyph], words[rightGlyph]);
+  }, [leftGlyph, rightGlyph])
+
   return (
     <div className="App">
       <header className="App-header">
+      </header>
+        <div>
+          <Typography>Score: {score ?? "n/a"}</Typography>
+        </div>
         <Select
           label="chose left glyph"
-          value={leftGlyph || ''}
+          value={leftGlyph ?? ''}
           onChange={(event) => {setLeftGlyph(event?.target?.value as number)}}
           >
         {
@@ -29,7 +41,7 @@ function App() {
         </Select>
         <Select
           label="chose right glyph"
-          value={rightGlyph || ''}
+          value={rightGlyph ?? ''}
           onChange={(event) => {setRightGlyph(event?.target?.value as number)}}
           >
         {
@@ -52,7 +64,6 @@ function App() {
             rightGlyph && <PenChar word={words[rightGlyph]}/>
           }
         </div>
-      </header>
     </div>
   );
 }
