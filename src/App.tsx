@@ -63,13 +63,13 @@ function App() {
         <div>
           <Typography>left glyph</Typography>
           {
-            leftGlyph && <PenChar word={words[leftGlyph]}/>
+            (leftGlyph !== undefined) && <PenChar word={words[leftGlyph]}/>
           }
         </div>
         <div>
           <Typography>right glyph</Typography>
           {
-            rightGlyph && <PenChar word={words[rightGlyph]}/>
+            (rightGlyph !== undefined) && <PenChar word={words[rightGlyph]}/>
           }
         </div>
     </div>

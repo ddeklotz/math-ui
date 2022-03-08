@@ -26,9 +26,6 @@ export const dtw_segment = (left: Stroke, right: Stroke)  => {
       );
     }
   }
-
-  const idx = dtw_idx(left.length - 1, right.length - 1);
-
   return DTW[dtw_idx(left.length - 1, right.length - 1)];
 }
 
