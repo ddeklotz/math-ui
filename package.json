@@ -15,7 +15,7 @@
     "@emotion/react": "latest",
     "react": "latest",
     "react-dom": "latest  ",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^5.0.0",
     "typescript": "^4.6.2"
   },
   "scripts": {

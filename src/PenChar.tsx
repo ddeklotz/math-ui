@@ -33,7 +33,7 @@ export const PenChar: React.FC<PenCharProps> = (props) => {
 
   return (
     <div className="pen-char">
-      <svg height="500" width="500">
+      <svg height="200" width="200">
         {
           lines.map((line, index) => {
             return (
