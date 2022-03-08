@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Word } from './model';
-import "./PenChar.css";
+import "./PenChar.scss";
 
 export interface PenCharProps {
   word: Word;

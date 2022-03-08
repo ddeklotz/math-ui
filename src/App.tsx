@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom';
-import './App.css';
+import './App.scss';
 import { DTWPage } from './pages/DTWPage';
 import { ListPage } from './pages/ListPage';
 import { NotFoundPage } from './pages/NotFoundPage';
