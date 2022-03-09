@@ -1,11 +1,12 @@
 
 import { FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import React, { useMemo, useState } from 'react';
+import { justify } from '../data';
 import { Glyph } from '../model';
 import { PenChar } from '../PenChar';
 import { dtw_word } from '../recognition';
 
-const glyphs = (require('../ujinumbers.json') as Glyph[]).slice(0, 100);
+const glyphs = (require('../ujinumbers.json') as Glyph[]);
 
 export const DTWPage: React.FC = () => {
   const [leftGlyph, setLeftGlyph] = useState<number>();

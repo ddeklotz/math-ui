@@ -1,3 +1,5 @@
+import { Typography } from '@mui/material';
+import { typography } from '@mui/system';
 import React, { useMemo } from 'react';
 import { Glyph } from './model';
 import "./PenChar.scss";
@@ -14,6 +16,24 @@ interface Line {
 }
 
 const scale = .1;
+
+export const GlyphCard: React.FC<PenCharProps> = ({glyph}) => {
+  return (
+    <div className="glyph-card">
+      <div className="glyph-text">
+        <Typography>
+          {glyph.writer}
+        </Typography>
+        <Typography>
+          {glyph.character} {glyph.repetition}
+        </Typography>
+      </div>
+      <div>
+        <PenChar glyph={glyph} />
+      </div>
+    </div>
+  )
+}
 
 export const PenChar: React.FC<PenCharProps> = (props) => {
   const lines = useMemo(() => {

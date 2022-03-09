@@ -18,3 +18,9 @@ A Template-based Recognition System for On-line
 Handwritten Characters*
 FEDERICO PRAT, ANDRÉS MARZAL, SERGIO MARTÍN, RAFAEL RAMOS-GARIJO
 AND MARÍA JOSÉ CASTRO+
+
+Improving a DTW-Based Recognition Engine for On-line Handwritten Characters by Using MLPs: 2009
+María José Castro-Bleda; Salvador España-Boquera; Jorge Gorbe-Moya; Francisco Zamora-Martínez; David Llorens-Piñana; Andrés Marzal-
+
+Isolated handwriting recognition via multi-stage Support Vector Machines: 2012
+Nadine Hajj; Mariette Awad

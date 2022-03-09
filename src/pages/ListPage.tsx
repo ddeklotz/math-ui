@@ -1,17 +1,19 @@
 import React, { useCallback } from "react"
 import { useResizeDetector } from "react-resize-detector"
 import { FixedSizeList } from 'react-window'
-import { allGlyphs } from "../data"
-import { PenChar } from "../PenChar"
+import { allGlyphs, justify } from "../data"
+import { GlyphCard, PenChar } from "../PenChar"
 
 import "./ListPage.scss"
+
+const glyphs = allGlyphs.map(justify);
 
 export const GlyphList: React.FC = () => {
 
   const renderRow = ({index, style}: {index: number, style: React.CSSProperties}) => {
     return (
       <div style={style}>
-        <PenChar glyph={allGlyphs[index]} />
+        <GlyphCard glyph={glyphs[index]} />
       </div>
     )
   }
@@ -24,7 +26,7 @@ export const GlyphList: React.FC = () => {
         height={height ?? 0}
         width={width ?? 0}
         itemSize={300}
-        itemCount={allGlyphs.length}
+        itemCount={glyphs.length}
         overscanCount={5}
       >
         {renderRow}
