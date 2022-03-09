@@ -1,5 +1,6 @@
-import { Word } from "./model";
+import { Glyph } from "./model";
 
-const words = (require('./ujinumbers.json') as Word[]);
+const glyphs = (require('./ujinumbers.json') as Glyph[]);
 
-export const allWords = words;
+export const allGlyphs = glyphs;
+

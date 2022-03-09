@@ -1,11 +1,11 @@
 
 import { FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import React, { useMemo, useState } from 'react';
-import { Word } from '../model';
+import { Glyph } from '../model';
 import { PenChar } from '../PenChar';
 import { dtw_word } from '../recognition';
 
-const words = (require('../ujinumbers.json') as Word[]).slice(0, 100);
+const glyphs = (require('../ujinumbers.json') as Glyph[]).slice(0, 100);
 
 export const DTWPage: React.FC = () => {
   const [leftGlyph, setLeftGlyph] = useState<number>();
@@ -15,7 +15,7 @@ export const DTWPage: React.FC = () => {
     if (leftGlyph === undefined || rightGlyph === undefined) {
       return undefined;
     }
-    return dtw_word(words[leftGlyph], words[rightGlyph]);
+    return dtw_word(glyphs[leftGlyph], glyphs[rightGlyph]);
   }, [leftGlyph, rightGlyph])
 
   return (
@@ -34,7 +34,7 @@ export const DTWPage: React.FC = () => {
             onChange={(event) => {setLeftGlyph(event?.target?.value as number)}}
             >
           {
-            words.map((word, index) => {
+            glyphs.map((word, index) => {
               return (
                 <MenuItem value={index} key={index}>{word.writer}: {word.character}</MenuItem>
               )
@@ -51,7 +51,7 @@ export const DTWPage: React.FC = () => {
             onChange={(event) => {setRightGlyph(event?.target?.value as number)}}
             >
           {
-            words.map((word, index) => {
+            glyphs.map((word, index) => {
               return (
                 <MenuItem value={index} key={index}>{word.writer}: {word.character}</MenuItem>
               )
@@ -62,13 +62,13 @@ export const DTWPage: React.FC = () => {
         <div>
           <Typography>left glyph</Typography>
           {
-            (leftGlyph !== undefined) && <PenChar word={words[leftGlyph]}/>
+            (leftGlyph !== undefined) && <PenChar glyph={glyphs[leftGlyph]}/>
           }
         </div>
         <div>
           <Typography>right glyph</Typography>
           {
-            (rightGlyph !== undefined) && <PenChar word={words[rightGlyph]}/>
+            (rightGlyph !== undefined) && <PenChar glyph={glyphs[rightGlyph]}/>
           }
         </div>
     </div>

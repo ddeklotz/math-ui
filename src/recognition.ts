@@ -1,4 +1,4 @@
-import { Stroke, Word } from "./model";
+import { Stroke, Glyph } from "./model";
 
 export const dtw_segment = (left: Stroke, right: Stroke)  => {
   // the DP solution matrix
@@ -29,7 +29,7 @@ export const dtw_segment = (left: Stroke, right: Stroke)  => {
   return DTW[dtw_idx(left.length - 1, right.length - 1)];
 }
 
-export const dtw_word = (left: Word, right: Word): number => {
+export const dtw_word = (left: Glyph, right: Glyph): number => {
   // can't really compare a real stroke to a totally empty stroke, because
   // that doesn't leave any room for the DP result table. Instead we just
   // provide one distant point.

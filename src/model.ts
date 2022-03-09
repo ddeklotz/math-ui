@@ -1,6 +1,6 @@
 export type Stroke = [number, number][];
 
-export interface Word {
+export interface Glyph {
   character: string;
   writer: string;
   repetition: number;

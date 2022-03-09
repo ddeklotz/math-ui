@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
-import { Word } from './model';
+import { Glyph } from './model';
 import "./PenChar.scss";
 
 export interface PenCharProps {
-  word: Word;
+  glyph: Glyph;
 }
 
 type Point = [number, number];
@@ -19,7 +19,7 @@ export const PenChar: React.FC<PenCharProps> = (props) => {
   const lines = useMemo(() => {
     const result: Line[] = [];
 
-    for (const stroke of props.word.strokes) {
+    for (const stroke of props.glyph.strokes) {
       for (let i = 0; i < stroke.length - 1; ++i) {
         result.push({
           start: stroke[i],
@@ -29,7 +29,7 @@ export const PenChar: React.FC<PenCharProps> = (props) => {
     }
 
     return result;
-  }, [props.word.strokes]);
+  }, [props.glyph.strokes]);
 
   return (
     <div className="pen-char">
