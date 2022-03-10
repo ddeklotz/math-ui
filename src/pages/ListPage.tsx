@@ -25,7 +25,7 @@ export const GlyphList: React.FC = () => {
       <FixedSizeList
         height={height ?? 0}
         width={width ?? 0}
-        itemSize={300}
+        itemSize={200}
         itemCount={glyphs.length}
         overscanCount={5}
       >

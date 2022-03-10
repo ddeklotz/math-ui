@@ -34,6 +34,37 @@ export const findTopLeft = (glyph: Glyph): [number, number] => {
   ];
 }
 
+export const findBottomRight = (glyph: Glyph): [number, number] => {
+  const strokes = glyph.strokes.flat()
+
+  return [
+    Math.max(...strokes.map(a => a[0])),
+    Math.max(...strokes.map(a => a[1]))
+  ];
+}
+
+export const findBoundingBox = (glyph: Glyph): {x: number, y: number, s: number} => {
+  const [leftX, topY] = findTopLeft(glyph);
+  const [rightX, bottomY] = findBottomRight(glyph);
+
+  const width = rightX - leftX;
+  const height = bottomY - topY;
+
+  if (height > width) {
+    return {
+      x: leftX - (height - width) * .5,
+      y: topY,
+      s: 1
+    };
+  } else {
+    return {
+      x: leftX,
+      y: topY - (width - height) * .5,
+      s: 1
+    };
+  }
+}
+
 export const justify = (glyph: Glyph): Glyph => {
   const [centerX, centerY] = findCenter(glyph);
 

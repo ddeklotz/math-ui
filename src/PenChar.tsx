@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import { typography } from '@mui/system';
 import React, { useMemo } from 'react';
 import { applyToPoints, compose, translate, scale, applyToPoint } from 'transformation-matrix';
-import { findTopLeft } from './data';
+import { findBoundingBox, findTopLeft } from './data';
 import { Glyph } from './model';
 import "./PenChar.scss";
 
@@ -37,15 +37,17 @@ export const GlyphCard: React.FC<PenCharProps> = ({glyph}) => {
   )
 }
 
+const offset = [10, 10];
+
 export const PenChar: React.FC<PenCharProps> = (props) => {
 
   // transform the points to svg space  
   const renderTransform = useMemo(() => {
-    const topleft = findTopLeft(props.glyph);
+    const boundingBox = findBoundingBox(props.glyph);
     return compose(
-      translate(10, 10),
+      translate(offset[0], offset[1]),
       scale(scalefactor),
-      translate(-topleft[0], -topleft[1])
+      translate(-boundingBox.x, -boundingBox.y)
     );
   }, [props.glyph.strokes]);
 
@@ -65,14 +67,15 @@ export const PenChar: React.FC<PenCharProps> = (props) => {
   }, [props.glyph.strokes, renderTransform]);
 
   const center = applyToPoint(renderTransform, [0, 0]);
-  const width = 200;
-  const height = 200;
+  const width = 140;
+  const height = 140;
     
   return (
     <div className="pen-char">
       <svg height={height} width={width}>
         <line key="x-axis" x1="0" x2={width} y1={center[1]} y2={center[1]} stroke="red" strokeWidth="1" />
-        <line key="x-axis" x1={center[0]} x2={center[0]} y1="0" y2={height} stroke="red" strokeWidth="1" />
+        <line key="y-axis" x1={center[0]} x2={center[0]} y1="0" y2={height} stroke="red" strokeWidth="1" />
+        <rect x={offset[0]} y={offset[1]} width={scalefactor} height={scalefactor} stroke="black" strokeWidth="1" fill="none" /> 
         {
           lines.map((line, index) => {
             return (
