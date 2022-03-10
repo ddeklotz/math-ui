@@ -25,6 +25,15 @@ export const findCenter = (glyph: Glyph): [number, number] => {
   ];
 }
 
+export const findTopLeft = (glyph: Glyph): [number, number] => {
+  const strokes = glyph.strokes.flat()
+
+  return [
+    Math.min(...strokes.map(a => a[0])),
+    Math.min(...strokes.map(a => a[1]))
+  ];
+}
+
 export const justify = (glyph: Glyph): Glyph => {
   const [centerX, centerY] = findCenter(glyph);
 

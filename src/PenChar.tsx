@@ -1,7 +1,8 @@
 import { Typography } from '@mui/material';
 import { typography } from '@mui/system';
 import React, { useMemo } from 'react';
-import { findCenter } from './data';
+import { applyToPoints, compose, translate, scale, applyToPoint } from 'transformation-matrix';
+import { findTopLeft } from './data';
 import { Glyph } from './model';
 import "./PenChar.scss";
 
@@ -16,7 +17,7 @@ interface Line {
   end: Point;
 }
 
-const scale = 100;
+const scalefactor = 100;
 
 export const GlyphCard: React.FC<PenCharProps> = ({glyph}) => {
   return (
@@ -37,32 +38,45 @@ export const GlyphCard: React.FC<PenCharProps> = ({glyph}) => {
 }
 
 export const PenChar: React.FC<PenCharProps> = (props) => {
+
+  // transform the points to svg space  
+  const renderTransform = useMemo(() => {
+    const topleft = findTopLeft(props.glyph);
+    return compose(
+      translate(10, 10),
+      scale(scalefactor),
+      translate(-topleft[0], -topleft[1])
+    );
+  }, [props.glyph.strokes]);
+
   const lines = useMemo(() => {
     const result: Line[] = [];
-
     for (const stroke of props.glyph.strokes) {
-      for (let i = 0; i < stroke.length - 1; ++i) {
+      const transformedStroke = applyToPoints(renderTransform, stroke);
+      for (let i = 0; i < transformedStroke.length - 1; ++i) {
         result.push({
-          start: stroke[i],
-          end: stroke[i + 1]
+          start: transformedStroke[i],
+          end: transformedStroke[i + 1]
         });
       }
     }
 
     return result;
-  }, [props.glyph.strokes]);
+  }, [props.glyph.strokes, renderTransform]);
 
-  //const center = [0, 0]; findCenter(props.glyph);
-  const center = findCenter(props.glyph);
-  console.log(center)
-
+  const center = applyToPoint(renderTransform, [0, 0]);
+  const width = 200;
+  const height = 200;
+    
   return (
     <div className="pen-char">
-      <svg height="200" width="200">
+      <svg height={height} width={width}>
+        <line key="x-axis" x1="0" x2={width} y1={center[1]} y2={center[1]} stroke="red" strokeWidth="1" />
+        <line key="x-axis" x1={center[0]} x2={center[0]} y1="0" y2={height} stroke="red" strokeWidth="1" />
         {
           lines.map((line, index) => {
             return (
-              <line key={index} x1={(line.start[0] + center[0])*scale} y1={(line.start[1] + center[1])*scale} x2={(line.end[0] + center[0])*scale} y2={(line.end[1] + center[1])*scale} stroke="black" strokeWidth="2"/>
+              <line key={index} x1={line.start[0]} y1={line.start[1]} x2={line.end[0]} y2={line.end[1]} stroke="black" strokeWidth="2"/>
             )
           })
         }
