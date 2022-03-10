@@ -1,12 +1,12 @@
 import React, { useCallback } from "react"
 import { useResizeDetector } from "react-resize-detector"
 import { FixedSizeList } from 'react-window'
-import { allGlyphs, justify } from "../data"
+import { allGlyphs, preprocess } from "../data"
 import { GlyphCard, PenChar } from "../PenChar"
 
 import "./ListPage.scss"
 
-const glyphs = allGlyphs.map(justify);
+const glyphs = allGlyphs.map(preprocess);
 
 export const GlyphList: React.FC = () => {
 
