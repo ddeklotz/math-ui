@@ -1,5 +1,6 @@
 import { Glyph } from "./model";
 import { scale, applyToPoints, Matrix, translate } from 'transformation-matrix';
+import { dtw_glyph } from "./recognition";
 
 const glyphs = (require('./ujinumbers.json') as Glyph[]);
 
@@ -93,3 +94,34 @@ export const correctSlant = (glyph: Glyph): Glyph => {
 export const preprocess = (glyph: Glyph): Glyph => {
   return normalize(justify(glyph))
 }
+
+export const glyphDescription = (glyph: Glyph) => `${glyph.writer}: ${glyph.character} rep${glyph.repetition}`
+
+export const classify = (glyph: Glyph, candidates: Glyph[]) => {
+  return candidates
+    .filter(g => g.writer !== glyph.writer)
+    .map(candidate => {
+      const distance = dtw_glyph(glyph, candidate);
+      return {
+        glyph: candidate,
+        distance
+      };
+    })
+    .sort((a, b) => a.distance - b.distance);
+}
+
+/*export const classifyAll = (glyphs: Glyph[]) => {
+    return glyphs.map(glyph => {
+        console.log(`classifying ${glyphDescription(glyph)}`)
+        return glyphs
+          .filter(g => g.writer !== glyph.writer)
+          .map(candidate => {
+            const distance = dtw_glyph(glyph, candidate);
+            return {
+              glyph: candidate,
+              distance
+            };
+          })
+          .sort((a, b) => a.distance - b.distance)
+      });
+}*/
