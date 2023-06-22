@@ -2,7 +2,7 @@ import { Glyph } from "./model";
 import { scale, applyToPoints, Matrix, translate } from 'transformation-matrix';
 import { dtw_glyph } from "./recognition";
 
-const glyphs = (require('./ujinumbers.json') as Glyph[]);
+const glyphs = (require('./glyphs.json') as Glyph[]);
 
 export const allGlyphs = glyphs;
 
