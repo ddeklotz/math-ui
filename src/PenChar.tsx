@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import { applyToPoints, compose, translate, scale, applyToPoint } from 'transformation-matrix';
-import { findBoundingBox, findTopLeft } from './data';
+import { findBoundingBox } from './data';
 import { Glyph } from './model';
 import "./PenChar.scss";
 
