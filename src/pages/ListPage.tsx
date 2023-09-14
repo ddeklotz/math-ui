@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { useResizeDetector } from "react-resize-detector"
 import { FixedSizeList } from 'react-window'
+import { Glyph } from "../model";
 import { allGlyphs, preprocess } from "../data"
 import { GlyphCard } from "../PenChar"
 
@@ -8,7 +9,7 @@ import "./ListPage.scss"
 
 const character_classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '=', '<', '>'];
 
-const glyphs = allGlyphs.map(preprocess);
+const initialGlyphs: Glyph[] = allGlyphs.map(preprocess);
 
 export interface GlyphListProps {
   shouldFilterByClass: boolean;
@@ -16,6 +17,7 @@ export interface GlyphListProps {
 }
 
 export const GlyphList: React.FC<GlyphListProps> = ({ shouldFilterByClass, selectedGlyphClass }) => {
+  const [glyphs, setGlyphs] = useState<Glyph[]>(initialGlyphs);
 
   const renderedGlyphs =
     shouldFilterByClass ?
@@ -25,7 +27,11 @@ export const GlyphList: React.FC<GlyphListProps> = ({ shouldFilterByClass, selec
   const renderRow = ({index, style}: {index: number, style: React.CSSProperties}) => {
     return (
       <div style={style}>
-        <GlyphCard glyph={renderedGlyphs[index]} />
+        <GlyphCard glyph={renderedGlyphs[index]}
+          onRemove={() => {
+            setGlyphs(glyphs.filter(g => g != renderedGlyphs[index]));
+          }
+        } />
       </div>
     )
   }

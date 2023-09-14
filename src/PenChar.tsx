@@ -5,6 +5,11 @@ import { findBoundingBox } from './data';
 import { Glyph } from './model';
 import "./PenChar.scss";
 
+export interface GlyphCardProps {
+  glyph: Glyph;
+  onRemove?: () => void;
+}
+
 export interface PenCharProps {
   glyph: Glyph;
 }
@@ -18,7 +23,7 @@ interface Line {
 
 const scalefactor = 100;
 
-export const GlyphCard: React.FC<PenCharProps> = ({glyph}) => {
+export const GlyphCard: React.FC<GlyphCardProps> = ({glyph, onRemove}) => {
   return (
     <div className="glyph-card">
       <div className="glyph-properties">
@@ -29,6 +34,9 @@ export const GlyphCard: React.FC<PenCharProps> = ({glyph}) => {
       </div>
       <div className="glyph-plot">
         <PenChar glyph={glyph} />
+      </div>
+      <div className='glyph-options'>
+        <button onClick={onRemove}>Remove</button>
       </div>
     </div>
   )
