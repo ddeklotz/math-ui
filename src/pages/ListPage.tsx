@@ -81,6 +81,14 @@ export const ListPage: React.FC = () => {
             }
         </select>
       </div>
+      <div className="export-controls">
+        <label>Output filename:</label>
+        <input
+          type="text"
+          onChange={() => {}}
+        />
+        <button onClick={() => {}}>Export</button>
+      </div>
 
       <GlyphList
         shouldFilterByClass={shouldFilterByClass}

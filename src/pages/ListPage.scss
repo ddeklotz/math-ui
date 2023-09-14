@@ -7,7 +7,15 @@
 }
 
 .filter-controls {
+  background-color: #fff;
   position: absolute;
   left: 0;
+  z-index: 1;
+}
+
+.export-controls {
+  background-color: #fff;
+  position: absolute;
+  right: 0;
   z-index: 1;
 }
