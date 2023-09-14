@@ -5,3 +5,9 @@
 .list {
   height: 100%;
 }
+
+.filter-controls {
+  position: absolute;
+  left: 0;
+  z-index: 1;
+}
