@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { useResizeDetector } from "react-resize-detector"
 import { FixedSizeList } from 'react-window'
 import { allGlyphs, preprocess } from "../data"
-import { GlyphCard, PenChar } from "../PenChar"
+import { GlyphCard } from "../PenChar"
 
 import "./ListPage.scss"
 

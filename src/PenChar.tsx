@@ -1,5 +1,4 @@
 import { Typography } from '@mui/material';
-import { typography } from '@mui/system';
 import React, { useMemo } from 'react';
 import { applyToPoints, compose, translate, scale, applyToPoint } from 'transformation-matrix';
 import { findBoundingBox, findTopLeft } from './data';
