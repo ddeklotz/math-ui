@@ -21,15 +21,13 @@ const scalefactor = 100;
 export const GlyphCard: React.FC<PenCharProps> = ({glyph}) => {
   return (
     <div className="glyph-card">
-      <div className="glyph-text">
-        <Typography>
-          {glyph.writer}
-        </Typography>
-        <Typography>
-          {glyph.character} {glyph.repetition}
-        </Typography>
+      <div className="glyph-properties">
+        <Typography>Writer = {glyph.writer.trim() === "" ? "?" : glyph.writer}</Typography>
+        <Typography>Character = {glyph.character}</Typography>
+        <Typography>Repetition = {glyph.repetition}</Typography>
+        <Typography>Number of strokes = {glyph.strokes.length}</Typography>
       </div>
-      <div>
+      <div className="glyph-plot">
         <PenChar glyph={glyph} />
       </div>
     </div>
