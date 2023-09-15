@@ -14,11 +14,11 @@ const initialGlyphs: Glyph[] = allGlyphs.map(preprocess);
 export interface GlyphListProps {
   shouldFilterByClass: boolean;
   selectedGlyphClass: string;
+  glyphs: Glyph[];
+  setGlyphs: (v: Glyph[]) => void;
 }
 
-export const GlyphList: React.FC<GlyphListProps> = ({ shouldFilterByClass, selectedGlyphClass }) => {
-  const [glyphs, setGlyphs] = useState<Glyph[]>(initialGlyphs);
-
+export const GlyphList: React.FC<GlyphListProps> = ({ shouldFilterByClass, selectedGlyphClass, glyphs, setGlyphs }) => {
   const renderedGlyphs =
     shouldFilterByClass ?
       glyphs.filter(g => g.character === selectedGlyphClass) :
@@ -56,6 +56,8 @@ export const GlyphList: React.FC<GlyphListProps> = ({ shouldFilterByClass, selec
 export const ListPage: React.FC = () => {
   const [shouldFilterByClass, setShouldFilterByClass] = useState(false);
   const [selectedGlyphClass, setSelectedGlyphClass] = useState('0');
+  const [outputFileName, setOutputFileName] = useState('examples.json');
+  const [glyphs, setGlyphs] = useState<Glyph[]>(initialGlyphs);
   
   return (
     <div className="list-page">
@@ -85,14 +87,31 @@ export const ListPage: React.FC = () => {
         <label>Output filename:</label>
         <input
           type="text"
-          onChange={() => {}}
+          value={outputFileName}
+          onChange={e => setOutputFileName(e.target.value)}
         />
-        <button onClick={() => {}}>Export</button>
+        <button
+          onClick={() => {
+            const jsonData = JSON.stringify(glyphs, null, 2);
+            const blob = new Blob([jsonData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = outputFileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          }
+        }>Export</button>
       </div>
 
       <GlyphList
         shouldFilterByClass={shouldFilterByClass}
-        selectedGlyphClass={selectedGlyphClass} />
+        selectedGlyphClass={selectedGlyphClass}
+        glyphs={glyphs}
+        setGlyphs={setGlyphs}
+      />
     </div>
   );
 };
