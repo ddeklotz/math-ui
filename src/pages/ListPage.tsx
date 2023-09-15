@@ -16,6 +16,8 @@ export interface GlyphListProps {
   selectedGlyphClass: string;
   shouldFilterByStrokes: boolean;
   selectedNumStrokes: string;
+  shouldFilterByWriter: boolean;
+  selectedWriter: string;
   glyphs: Glyph[];
   setGlyphs: (v: Glyph[]) => void;
 }
@@ -25,25 +27,31 @@ export const GlyphList: React.FC<GlyphListProps> = ({
   selectedGlyphClass,
   shouldFilterByStrokes,
   selectedNumStrokes,
+  shouldFilterByWriter,
+  selectedWriter,
   glyphs,
   setGlyphs
 }) => {
-  let renderedGlyphs = glyphs;
+  let filteredGlyphs = glyphs;
   
-  renderedGlyphs = shouldFilterByClass ?
-    renderedGlyphs.filter(g => g.character === selectedGlyphClass) :
-    renderedGlyphs;
+  filteredGlyphs = shouldFilterByClass ?
+    filteredGlyphs.filter(g => g.character === selectedGlyphClass) :
+    filteredGlyphs;
 
-  renderedGlyphs = shouldFilterByStrokes ?
-    renderedGlyphs.filter(g => g.strokes.length.toString() === selectedNumStrokes) :
-    renderedGlyphs;
+  filteredGlyphs = shouldFilterByStrokes ?
+    filteredGlyphs.filter(g => g.strokes.length.toString() === selectedNumStrokes) :
+    filteredGlyphs;
+
+  filteredGlyphs = shouldFilterByWriter ?
+    filteredGlyphs.filter(g => g.writer === selectedWriter) :
+    filteredGlyphs;
   
   const renderRow = ({index, style}: {index: number, style: React.CSSProperties}) => {
     return (
       <div style={style}>
-        <GlyphCard glyph={renderedGlyphs[index]}
+        <GlyphCard glyph={filteredGlyphs[index]}
           onRemove={() => {
-            setGlyphs(glyphs.filter(g => g != renderedGlyphs[index]));
+            setGlyphs(glyphs.filter(g => g != filteredGlyphs[index]));
           }
         } />
       </div>
@@ -58,7 +66,7 @@ export const GlyphList: React.FC<GlyphListProps> = ({
         height={height ? height : 0}
         width={width ?? 0}
         itemSize={200}
-        itemCount={renderedGlyphs.length}
+        itemCount={filteredGlyphs.length}
         overscanCount={5}
       >
         {renderRow}
@@ -72,16 +80,27 @@ export const ListPage: React.FC = () => {
   const [selectedGlyphClass, setSelectedGlyphClass] = useState('0');
   const [shouldFilterByStrokes, setShouldFilterByStrokes] = useState(false);
   const [selectedNumStrokes, setSelectedNumStrokes] = useState('0');
+  const [shouldFilterByWriter, setShouldFilterByWriter] = useState(false);
+  const [selectedWriter, setSelectedWriter] = useState('');
   const [outputFileName, setOutputFileName] = useState('examples.json');
   const [glyphs, setGlyphs] = useState<Glyph[]>(initialGlyphs);
 
-  // Map all the unique number of strokes in the dataset
+  // Map data from all the glyphs in the dataset
   let strokeCountMap: { [key: string]: boolean } = {};
-  glyphs.forEach(g => strokeCountMap[g.strokes.length.toString()] = true);
+  let writerMap: { [key: string]: boolean } = {};
+  glyphs.forEach(g => {
+    strokeCountMap[g.strokes.length.toString()] = true;
+    writerMap[g.writer] = true;
+  });
 
   const strokeCountArray = Object.keys(strokeCountMap);
   if (strokeCountArray.length > 0 && !strokeCountMap[selectedNumStrokes]) {
     setSelectedNumStrokes(strokeCountArray[0]);
+  }
+
+  const writerArray = Object.keys(writerMap);
+  if (writerArray.length > 0 && !writerMap[selectedWriter]) {
+    setSelectedWriter(writerArray[0]);
   }
   
   return (
@@ -116,6 +135,21 @@ export const ListPage: React.FC = () => {
           onChange={e => setSelectedNumStrokes(e.target.value)}>
             {strokeCountArray.map(c => <option value={c}>{c}</option>)}
         </select>
+        <br></br>
+        <label>
+          <input
+            type="checkbox"
+            checked={shouldFilterByWriter}
+            onChange={e => setShouldFilterByWriter(e.target.checked)}
+          />
+          Filter examples by writer: 
+        </label>
+        <select
+          className="class-dropdown"
+          value={selectedWriter}
+          onChange={e => setSelectedWriter(e.target.value)}>
+            {writerArray.map(w => <option value={w}>{w}</option>)}
+        </select>
       </div>
       <div className="export-controls">
         <label>Output filename:</label>
@@ -145,6 +179,8 @@ export const ListPage: React.FC = () => {
         selectedGlyphClass={selectedGlyphClass}
         shouldFilterByStrokes={shouldFilterByStrokes}
         selectedNumStrokes={selectedNumStrokes}
+        shouldFilterByWriter={shouldFilterByWriter}
+        selectedWriter={selectedWriter}
         glyphs={glyphs}
         setGlyphs={setGlyphs}
       />
