@@ -14,16 +14,30 @@ const initialGlyphs: Glyph[] = allGlyphs.map(preprocess);
 export interface GlyphListProps {
   shouldFilterByClass: boolean;
   selectedGlyphClass: string;
+  shouldFilterByStrokes: boolean;
+  selectedNumStrokes: string;
   glyphs: Glyph[];
   setGlyphs: (v: Glyph[]) => void;
 }
 
-export const GlyphList: React.FC<GlyphListProps> = ({ shouldFilterByClass, selectedGlyphClass, glyphs, setGlyphs }) => {
-  const renderedGlyphs =
-    shouldFilterByClass ?
-      glyphs.filter(g => g.character === selectedGlyphClass) :
-      glyphs;
+export const GlyphList: React.FC<GlyphListProps> = ({
+  shouldFilterByClass,
+  selectedGlyphClass,
+  shouldFilterByStrokes,
+  selectedNumStrokes,
+  glyphs,
+  setGlyphs
+}) => {
+  let renderedGlyphs = glyphs;
+  
+  renderedGlyphs = shouldFilterByClass ?
+    renderedGlyphs.filter(g => g.character === selectedGlyphClass) :
+    renderedGlyphs;
 
+  renderedGlyphs = shouldFilterByStrokes ?
+    renderedGlyphs.filter(g => g.strokes.length.toString() === selectedNumStrokes) :
+    renderedGlyphs;
+  
   const renderRow = ({index, style}: {index: number, style: React.CSSProperties}) => {
     return (
       <div style={style}>
@@ -56,8 +70,19 @@ export const GlyphList: React.FC<GlyphListProps> = ({ shouldFilterByClass, selec
 export const ListPage: React.FC = () => {
   const [shouldFilterByClass, setShouldFilterByClass] = useState(false);
   const [selectedGlyphClass, setSelectedGlyphClass] = useState('0');
+  const [shouldFilterByStrokes, setShouldFilterByStrokes] = useState(false);
+  const [selectedNumStrokes, setSelectedNumStrokes] = useState('0');
   const [outputFileName, setOutputFileName] = useState('examples.json');
   const [glyphs, setGlyphs] = useState<Glyph[]>(initialGlyphs);
+
+  // Map all the unique number of strokes in the dataset
+  let strokeCountMap: { [key: string]: boolean } = {};
+  glyphs.forEach(g => strokeCountMap[g.strokes.length.toString()] = true);
+
+  const strokeCountArray = Object.keys(strokeCountMap);
+  if (strokeCountArray.length > 0 && !strokeCountMap[selectedNumStrokes]) {
+    setSelectedNumStrokes(strokeCountArray[0]);
+  }
   
   return (
     <div className="list-page">
@@ -65,8 +90,6 @@ export const ListPage: React.FC = () => {
         <label>
           <input
             type="checkbox"
-            name="showCheckbox"
-            id="showCheckbox"
             checked={shouldFilterByClass}
             onChange={e => setShouldFilterByClass(e.target.checked)}
           />
@@ -76,11 +99,22 @@ export const ListPage: React.FC = () => {
           className="class-dropdown"
           value={selectedGlyphClass}
           onChange={e => setSelectedGlyphClass(e.target.value)}>
-            {
-              character_classes.map(c =>
-                <option value={c}>{c}</option>
-              )
-            }
+            {character_classes.map(c => <option value={c}>{c}</option>)}
+        </select>
+        <br></br>
+        <label>
+          <input
+            type="checkbox"
+            checked={shouldFilterByStrokes}
+            onChange={e => setShouldFilterByStrokes(e.target.checked)}
+          />
+          Filter examples by number of strokes: 
+        </label>
+        <select
+          className="class-dropdown"
+          value={selectedNumStrokes}
+          onChange={e => setSelectedNumStrokes(e.target.value)}>
+            {strokeCountArray.map(c => <option value={c}>{c}</option>)}
         </select>
       </div>
       <div className="export-controls">
@@ -109,6 +143,8 @@ export const ListPage: React.FC = () => {
       <GlyphList
         shouldFilterByClass={shouldFilterByClass}
         selectedGlyphClass={selectedGlyphClass}
+        shouldFilterByStrokes={shouldFilterByStrokes}
+        selectedNumStrokes={selectedNumStrokes}
         glyphs={glyphs}
         setGlyphs={setGlyphs}
       />
