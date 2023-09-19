@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { useResizeDetector } from "react-resize-detector"
 import { FixedSizeList } from 'react-window'
 import { Glyph } from "../model";
-import { allGlyphs, preprocess } from "../data"
+import { allGlyphs, generateIncompleteGlyphs, generateSplitGlyphs, preprocess } from "../data"
 import { GlyphCard } from "../PenChar"
 
 import "./ListPage.scss"
@@ -10,6 +10,8 @@ import "./ListPage.scss"
 const character_classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '=', '<', '>'];
 
 const initialGlyphs: Glyph[] = allGlyphs.map(preprocess);
+//const initialGlyphs: Glyph[] = generateSplitGlyphs(allGlyphs.map(preprocess), 2).map(preprocess);
+//const initialGlyphs: Glyph[] = generateIncompleteGlyphs(allGlyphs.map(preprocess)).map(preprocess);
 
 export interface GlyphListProps {
   shouldFilterByClass: boolean;

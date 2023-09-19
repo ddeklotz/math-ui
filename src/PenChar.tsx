@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 import { applyToPoints, compose, translate, scale, applyToPoint } from 'transformation-matrix';
-import { findBoundingBox } from './data';
+import { findDisplayBoundingBox } from './data';
 import { Glyph } from './model';
 import "./PenChar.scss";
 
@@ -48,7 +48,7 @@ export const PenChar: React.FC<PenCharProps> = (props) => {
 
   // transform the points to svg space  
   const renderTransform = useMemo(() => {
-    const boundingBox = findBoundingBox(props.glyph);
+    const boundingBox = findDisplayBoundingBox(props.glyph);
     return compose(
       translate(offset[0], offset[1]),
       scale(scalefactor),
