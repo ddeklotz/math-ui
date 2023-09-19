@@ -1,13 +1,34 @@
-import React, { useState } from "react"
-import { useResizeDetector } from "react-resize-detector"
-import { FixedSizeList } from 'react-window'
+import React, { useState } from "react";
+import { useResizeDetector } from "react-resize-detector";
+import { FixedSizeList } from "react-window";
 import { Glyph } from "../model";
-import { allGlyphs, generateIncompleteGlyphs, generateSplitGlyphs, preprocess } from "../data"
-import { GlyphCard } from "../PenChar"
+import {
+  allGlyphs,
+  generateIncompleteGlyphs,
+  generateSplitGlyphs,
+  preprocess,
+} from "../data";
+import { GlyphCard } from "../PenChar";
 
-import "./ListPage.scss"
+import "./ListPage.scss";
 
-const character_classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '=', '<', '>'];
+const character_classes = [
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "+",
+  "-",
+  "=",
+  "<",
+  ">",
+];
 
 const initialGlyphs: Glyph[] = allGlyphs.map(preprocess);
 //const initialGlyphs: Glyph[] = generateSplitGlyphs(allGlyphs.map(preprocess), 2).map(preprocess);
@@ -32,35 +53,44 @@ export const GlyphList: React.FC<GlyphListProps> = ({
   shouldFilterByWriter,
   selectedWriter,
   glyphs,
-  setGlyphs
+  setGlyphs,
 }) => {
   let filteredGlyphs = glyphs;
-  
-  filteredGlyphs = shouldFilterByClass ?
-    filteredGlyphs.filter(g => g.character === selectedGlyphClass) :
-    filteredGlyphs;
 
-  filteredGlyphs = shouldFilterByStrokes ?
-    filteredGlyphs.filter(g => g.strokes.length.toString() === selectedNumStrokes) :
-    filteredGlyphs;
+  filteredGlyphs = shouldFilterByClass
+    ? filteredGlyphs.filter((g) => g.character === selectedGlyphClass)
+    : filteredGlyphs;
 
-  filteredGlyphs = shouldFilterByWriter ?
-    filteredGlyphs.filter(g => g.writer === selectedWriter) :
-    filteredGlyphs;
-  
-  const renderRow = ({index, style}: {index: number, style: React.CSSProperties}) => {
+  filteredGlyphs = shouldFilterByStrokes
+    ? filteredGlyphs.filter(
+        (g) => g.strokes.length.toString() === selectedNumStrokes,
+      )
+    : filteredGlyphs;
+
+  filteredGlyphs = shouldFilterByWriter
+    ? filteredGlyphs.filter((g) => g.writer === selectedWriter)
+    : filteredGlyphs;
+
+  const renderRow = ({
+    index,
+    style,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+  }) => {
     return (
       <div style={style}>
-        <GlyphCard glyph={filteredGlyphs[index]}
+        <GlyphCard
+          glyph={filteredGlyphs[index]}
           onRemove={() => {
-            setGlyphs(glyphs.filter(g => g != filteredGlyphs[index]));
-          }
-        } />
+            setGlyphs(glyphs.filter((g) => g != filteredGlyphs[index]));
+          }}
+        />
       </div>
-    )
-  }
+    );
+  };
 
-  const { ref, width, height } = useResizeDetector()
+  const { ref, width, height } = useResizeDetector();
 
   return (
     <div className="list" ref={ref}>
@@ -74,23 +104,23 @@ export const GlyphList: React.FC<GlyphListProps> = ({
         {renderRow}
       </FixedSizeList>
     </div>
-  )
-}
+  );
+};
 
 export const ListPage: React.FC = () => {
   const [shouldFilterByClass, setShouldFilterByClass] = useState(false);
-  const [selectedGlyphClass, setSelectedGlyphClass] = useState('0');
+  const [selectedGlyphClass, setSelectedGlyphClass] = useState("0");
   const [shouldFilterByStrokes, setShouldFilterByStrokes] = useState(false);
-  const [selectedNumStrokes, setSelectedNumStrokes] = useState('0');
+  const [selectedNumStrokes, setSelectedNumStrokes] = useState("0");
   const [shouldFilterByWriter, setShouldFilterByWriter] = useState(false);
-  const [selectedWriter, setSelectedWriter] = useState('');
-  const [outputFileName, setOutputFileName] = useState('examples.json');
+  const [selectedWriter, setSelectedWriter] = useState("");
+  const [outputFileName, setOutputFileName] = useState("examples.json");
   const [glyphs, setGlyphs] = useState<Glyph[]>(initialGlyphs);
 
   // Map data from all the glyphs in the dataset
   let strokeCountMap: { [key: string]: boolean } = {};
   let writerMap: { [key: string]: boolean } = {};
-  glyphs.forEach(g => {
+  glyphs.forEach((g) => {
     strokeCountMap[g.strokes.length.toString()] = true;
     writerMap[g.writer] = true;
   });
@@ -104,7 +134,7 @@ export const ListPage: React.FC = () => {
   if (writerArray.length > 0 && !writerMap[selectedWriter]) {
     setSelectedWriter(writerArray[0]);
   }
-  
+
   return (
     <div className="list-page">
       <div className="filter-controls">
@@ -112,45 +142,54 @@ export const ListPage: React.FC = () => {
           <input
             type="checkbox"
             checked={shouldFilterByClass}
-            onChange={e => setShouldFilterByClass(e.target.checked)}
+            onChange={(e) => setShouldFilterByClass(e.target.checked)}
           />
-          Filter examples by class: 
+          Filter examples by class:
         </label>
         <select
           className="class-dropdown"
           value={selectedGlyphClass}
-          onChange={e => setSelectedGlyphClass(e.target.value)}>
-            {character_classes.map(c => <option value={c}>{c}</option>)}
+          onChange={(e) => setSelectedGlyphClass(e.target.value)}
+        >
+          {character_classes.map((c) => (
+            <option value={c}>{c}</option>
+          ))}
         </select>
         <br></br>
         <label>
           <input
             type="checkbox"
             checked={shouldFilterByStrokes}
-            onChange={e => setShouldFilterByStrokes(e.target.checked)}
+            onChange={(e) => setShouldFilterByStrokes(e.target.checked)}
           />
-          Filter examples by number of strokes: 
+          Filter examples by number of strokes:
         </label>
         <select
           className="class-dropdown"
           value={selectedNumStrokes}
-          onChange={e => setSelectedNumStrokes(e.target.value)}>
-            {strokeCountArray.map(c => <option value={c}>{c}</option>)}
+          onChange={(e) => setSelectedNumStrokes(e.target.value)}
+        >
+          {strokeCountArray.map((c) => (
+            <option value={c}>{c}</option>
+          ))}
         </select>
         <br></br>
         <label>
           <input
             type="checkbox"
             checked={shouldFilterByWriter}
-            onChange={e => setShouldFilterByWriter(e.target.checked)}
+            onChange={(e) => setShouldFilterByWriter(e.target.checked)}
           />
-          Filter examples by writer: 
+          Filter examples by writer:
         </label>
         <select
           className="class-dropdown"
           value={selectedWriter}
-          onChange={e => setSelectedWriter(e.target.value)}>
-            {writerArray.map(w => <option value={w}>{w}</option>)}
+          onChange={(e) => setSelectedWriter(e.target.value)}
+        >
+          {writerArray.map((w) => (
+            <option value={w}>{w}</option>
+          ))}
         </select>
       </div>
       <div className="export-controls">
@@ -158,22 +197,24 @@ export const ListPage: React.FC = () => {
         <input
           type="text"
           value={outputFileName}
-          onChange={e => setOutputFileName(e.target.value)}
+          onChange={(e) => setOutputFileName(e.target.value)}
         />
         <button
           onClick={() => {
             const jsonData = JSON.stringify(glyphs, null, 2);
-            const blob = new Blob([jsonData], { type: 'application/json' });
+            const blob = new Blob([jsonData], { type: "application/json" });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
+            const a = document.createElement("a");
             a.href = url;
             a.download = outputFileName;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-          }
-        }>Export</button>
+          }}
+        >
+          Export
+        </button>
       </div>
 
       <GlyphList

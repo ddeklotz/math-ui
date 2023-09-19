@@ -11,10 +11,12 @@ Note: most of the old code here is for exploring the DTW (Dynamic Time Warp) bas
 src/data.ts loads the data from a json file at the very top. You can point that to any json file with the expected format.
 
 from root directory:
+
 ```
 npm install
 npm start
 ```
+
 browse to <host url>/list
 
 ### process stroke data
@@ -22,10 +24,10 @@ browse to <host url>/list
 utilities/utilities.ts has a convertFile function that can convert files with raw arrays of touch data into the json form we use in various projects. We like the object form because the label can be included alongside the stroke data.
 
 My typical workflow is:
- - run convertFile on the raw data to generate a json file for the data.
- - copy the resulting file into the react app and load it in the viewer.
- - walk through each element in the json file in coordination with the viewer, update the labels as necessary and save to confirm the results in the viewer.
 
+- run convertFile on the raw data to generate a json file for the data.
+- copy the resulting file into the react app and load it in the viewer.
+- walk through each element in the json file in coordination with the viewer, update the labels as necessary and save to confirm the results in the viewer.
 
 ## references for DTW and on-line handwritten text recognition in general
 
@@ -39,7 +41,7 @@ Proceeding of the Asia-Pacific Workshop 2007 on Visual Information Processing, p
 
 best reference paper so far: 2009
 A Template-based Recognition System for On-line
-Handwritten Characters*
+Handwritten Characters\*
 FEDERICO PRAT, ANDRÉS MARZAL, SERGIO MARTÍN, RAFAEL RAMOS-GARIJO
 AND MARÍA JOSÉ CASTRO+
 
