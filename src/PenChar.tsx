@@ -1,10 +1,20 @@
-import { Typography } from '@mui/material';
-import { typography } from '@mui/system';
-import React, { useMemo } from 'react';
-import { applyToPoints, compose, translate, scale, applyToPoint } from 'transformation-matrix';
-import { findBoundingBox, findTopLeft } from './data';
-import { Glyph } from './model';
+import { Typography } from "@mui/material";
+import React, { useMemo } from "react";
+import {
+  applyToPoints,
+  compose,
+  translate,
+  scale,
+  applyToPoint,
+} from "transformation-matrix";
+import { findDisplayBoundingBox } from "./data";
+import { Glyph } from "./model";
 import "./PenChar.scss";
+
+export interface GlyphCardProps {
+  glyph: Glyph;
+  onRemove?: () => void;
+}
 
 export interface PenCharProps {
   glyph: Glyph;
@@ -19,35 +29,37 @@ interface Line {
 
 const scalefactor = 100;
 
-export const GlyphCard: React.FC<PenCharProps> = ({glyph}) => {
+export const GlyphCard: React.FC<GlyphCardProps> = ({ glyph, onRemove }) => {
   return (
     <div className="glyph-card">
-      <div className="glyph-text">
+      <div className="glyph-properties">
         <Typography>
-          {glyph.writer}
+          Writer = {glyph.writer.trim() === "" ? "?" : glyph.writer}
         </Typography>
-        <Typography>
-          {glyph.character} {glyph.repetition}
-        </Typography>
+        <Typography>Character = {glyph.character}</Typography>
+        <Typography>Repetition = {glyph.repetition}</Typography>
+        <Typography>Number of strokes = {glyph.strokes.length}</Typography>
       </div>
-      <div>
+      <div className="glyph-plot">
         <PenChar glyph={glyph} />
       </div>
+      <div className="glyph-options">
+        <button onClick={onRemove}>Remove</button>
+      </div>
     </div>
-  )
-}
+  );
+};
 
 const offset = [10, 10];
 
 export const PenChar: React.FC<PenCharProps> = (props) => {
-
-  // transform the points to svg space  
+  // transform the points to svg space
   const renderTransform = useMemo(() => {
-    const boundingBox = findBoundingBox(props.glyph);
+    const boundingBox = findDisplayBoundingBox(props.glyph);
     return compose(
       translate(offset[0], offset[1]),
       scale(scalefactor),
-      translate(-boundingBox.x, -boundingBox.y)
+      translate(-boundingBox.x, -boundingBox.y),
     );
   }, [props.glyph.strokes]);
 
@@ -58,7 +70,7 @@ export const PenChar: React.FC<PenCharProps> = (props) => {
       for (let i = 0; i < transformedStroke.length - 1; ++i) {
         result.push({
           start: transformedStroke[i],
-          end: transformedStroke[i + 1]
+          end: transformedStroke[i + 1],
         });
       }
     }
@@ -69,21 +81,51 @@ export const PenChar: React.FC<PenCharProps> = (props) => {
   const center = applyToPoint(renderTransform, [0, 0]);
   const width = 140;
   const height = 140;
-    
+
   return (
     <div className="pen-char">
       <svg height={height} width={width}>
-        <line key="x-axis" x1="0" x2={width} y1={center[1]} y2={center[1]} stroke="red" strokeWidth="1" />
-        <line key="y-axis" x1={center[0]} x2={center[0]} y1="0" y2={height} stroke="red" strokeWidth="1" />
-        <rect x={offset[0]} y={offset[1]} width={scalefactor} height={scalefactor} stroke="black" strokeWidth="1" fill="none" /> 
-        {
-          lines.map((line, index) => {
-            return (
-              <line key={index} x1={line.start[0]} y1={line.start[1]} x2={line.end[0]} y2={line.end[1]} stroke="black" strokeWidth="2"/>
-            )
-          })
-        }
+        <line
+          key="x-axis"
+          x1="0"
+          x2={width}
+          y1={center[1]}
+          y2={center[1]}
+          stroke="red"
+          strokeWidth="1"
+        />
+        <line
+          key="y-axis"
+          x1={center[0]}
+          x2={center[0]}
+          y1="0"
+          y2={height}
+          stroke="red"
+          strokeWidth="1"
+        />
+        <rect
+          x={offset[0]}
+          y={offset[1]}
+          width={scalefactor}
+          height={scalefactor}
+          stroke="black"
+          strokeWidth="1"
+          fill="none"
+        />
+        {lines.map((line, index) => {
+          return (
+            <line
+              key={index}
+              x1={line.start[0]}
+              y1={line.start[1]}
+              x2={line.end[0]}
+              y2={line.end[1]}
+              stroke="black"
+              strokeWidth="2"
+            />
+          );
+        })}
       </svg>
     </div>
   );
-}
+};

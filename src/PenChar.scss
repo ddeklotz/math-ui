@@ -1,3 +1,23 @@
 .pen-char {
   background-color: white;
 }
+
+.glyph-properties {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.glyph-plot {
+  display: inline-block;
+}
+
+// Only show the additional options when the user hovers over the glyph card
+.glyph-options {
+  visibility: hidden;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.glyph-card:hover .glyph-options {
+  visibility: visible;
+}

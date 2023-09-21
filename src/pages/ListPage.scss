@@ -5,3 +5,18 @@
 .list {
   height: 100%;
 }
+
+.filter-controls {
+  background-color: #fff;
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  text-align: left;
+}
+
+.export-controls {
+  background-color: #fff;
+  position: absolute;
+  right: 0;
+  z-index: 1;
+}
